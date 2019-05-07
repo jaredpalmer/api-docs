@@ -138,12 +138,12 @@ const PermalinkSpan = styled.span`
 
 /**
  * Puts a copy to clipboard link on the page, where `id` is the url hash and
- * the `ref` is the model id.
+ * the `modelId` is the model id.
  */
-export const Permalink: React.FunctionComponent<{ id: string; name: string; ref: string; skipnav?: boolean }> = ({
+export const Permalink: React.FunctionComponent<{ id: string; name: string; modelId?: string; skipnav?: boolean }> = ({
     id,
-    ref,
     name,
+    modelId,
     skipnav = false,
 }) => {
     if (!id && !name) return null
@@ -156,7 +156,7 @@ export const Permalink: React.FunctionComponent<{ id: string; name: string; ref:
                 <CopyToClipboard title="Copy Link" className="copy" href={`#${id}`}>
                     #
                 </CopyToClipboard>
-                <PermalinkAnchor id={id} ref={ref} />
+                <PermalinkAnchor id={id} modelId={modelId} />
             </PermalinkSpan>
         </>
     )
@@ -164,10 +164,10 @@ export const Permalink: React.FunctionComponent<{ id: string; name: string; ref:
 
 /**
  * Puts a linkable anchor on the page, see <RefAnchor /> where `id` is the
- * unique value used as the url hash and `ref` is the id of the API model.
+ * unique value used as the url hash and `modelId` is the id of the API model.
  */
-export const PermalinkAnchor: React.FunctionComponent<{ id: string, ref: string }> = ({ id, ref }) => {
+export const PermalinkAnchor: React.FunctionComponent<{ id: string, modelId?: string }> = ({ id, modelId }) => {
     // Offset the permalink from its position in the DOM to give some breathing room.
     const style: React.CSSProperties = { position: "absolute", top: -60, display: "block" }
-    return <span id={id} data-permalink-id={id} data-permalink-ref={ref} data-permalink-path={`${usePath()}#${id}`} aria-hidden style={style} />
+    return <span id={id} data-permalink-id={id} data-permalink-ref={modelId} data-permalink-path={`${usePath()}#${id}`} aria-hidden style={style} />
 }

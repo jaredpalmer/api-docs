@@ -17,7 +17,7 @@ import { apiClassName } from "./helpers"
 export const APIFunctionElement: React.FunctionComponent<MethodModel> = props => {
     const signatures = [props].concat(props.overloads).map(method => (
         <h3 key={method.id}>
-            <Permalink id={props.permalink} ref={props.id} name={props.name + "()"} skipnav={props.skipnav} />
+            <Permalink id={props.permalink} modelId={props.id} name={props.name + "()"} skipnav />
             <code className="language-typescript">{method.signature}</code> <ReleaseBadge {...props} />
         </h3>
     ))

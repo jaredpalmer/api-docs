@@ -36,7 +36,7 @@ export const APINamespaceElement: React.FunctionComponent<NamespaceModel & {skip
         header = (
             <Grid className={"grid-section-h2 " + apiClassName("namespace", props, rest)}>
                 <h2>
-                    <Permalink id={props.permalink} ref={props.id} name={props.name} skipnav={props.skipnav} />
+                    <Permalink id={props.permalink} modelId={props.id} name={props.name} skipnav={props.skipnav} />
                     {props.name || "Unknown Name"} <ReleaseBadge {...props} />
                 </h2>
                 <DeprecatedNotice {...props} />
