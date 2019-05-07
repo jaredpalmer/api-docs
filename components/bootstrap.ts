@@ -44,7 +44,8 @@ if (typeof document !== "undefined") {
             // Don't do anything when interacting with a demo to avoid
             // slowing down interactions. Removing the class from the body
             // triggers a recalculation.
-            if (evt.target.closest(".embedded-demo")) return
+            const target = evt.target instanceof HTMLElement ? evt.target : null
+            if (!target || target.closest(".embedded-demo")) return
             document.body.classList.remove("is-mouseover-code")
         })
     })
