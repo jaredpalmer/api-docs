@@ -49,6 +49,7 @@ export enum ReleaseTag {
 export interface BaseModel {
     id: string
     parentId: string | null
+    permalink: string
     name: string
     fullname: string
     kind: Kind
