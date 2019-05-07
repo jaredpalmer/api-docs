@@ -13,6 +13,7 @@ export const Ref: React.FunctionComponent<{ name: string }> = ({ name, children 
 export const RefAnchor: React.FunctionComponent<{name: string}> = ({name}) => {
     const api = React.useContext(FramerAPIContext)
     const model = api.resolve(name)
+    const id = model ? model.permalink : name
     const ref = model ? model.id : name
-    return <PermalinkAnchor id={ref} />
+    return <PermalinkAnchor id={id} ref={ref} />
 }

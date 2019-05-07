@@ -236,6 +236,7 @@ function toParameter(method: ApiMethod | ApiMethodSignature | ApiFunction, param
         ...toCommon(method), // Inherit parent properties and override
         id: toParameterId(method, param),
         parentId: toId(method),
+        permalink: toPermalink(method, toParameterId(method, param)),
         name: param.name,
         fullname: `${method.getScopedNameWithinPackage()}.${param.name}`,
         kind: Kind.Parameter,

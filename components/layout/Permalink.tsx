@@ -136,8 +136,13 @@ const PermalinkSpan = styled.span`
     }
 `
 
-export const Permalink: React.FunctionComponent<{ id: string; name: string; skipnav?: boolean }> = ({
+/**
+ * Puts a copy to clipboard link on the page, where `id` is the url hash and
+ * the `ref` is the model id.
+ */
+export const Permalink: React.FunctionComponent<{ id: string; name: string; ref: string; skipnav?: boolean }> = ({
     id,
+    ref,
     name,
     skipnav = false,
 }) => {
@@ -151,17 +156,18 @@ export const Permalink: React.FunctionComponent<{ id: string; name: string; skip
                 <CopyToClipboard title="Copy Link" className="copy" href={`#${id}`}>
                     #
                 </CopyToClipboard>
-                <PermalinkAnchor id={id} />
+                <PermalinkAnchor id={id} ref={ref} />
             </PermalinkSpan>
         </>
     )
 }
 
 /**
- * Puts a linkable anchor on the page, see <RefAnchor />
+ * Puts a linkable anchor on the page, see <RefAnchor /> where `id` is the
+ * unique value used as the url hash and `ref` is the id of the API model.
  */
-export const PermalinkAnchor: React.FunctionComponent<{ id: string }> = ({ id }) => {
+export const PermalinkAnchor: React.FunctionComponent<{ id: string, ref: string }> = ({ id, ref }) => {
     // Offset the permalink from its position in the DOM to give some breathing room.
     const style: React.CSSProperties = { position: "absolute", top: -60, display: "block" }
-    return <span id={id} data-permalink-id={id} data-permalink-path={`${usePath()}#${id}`} aria-hidden style={style} />
+    return <span id={id} data-permalink-id={id} data-permalink-ref={ref} data-permalink-path={`${usePath()}#${id}`} aria-hidden style={style} />
 }

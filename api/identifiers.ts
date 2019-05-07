@@ -1,25 +1,28 @@
 import * as crypto from "crypto"
 import {
-    ApiItem,
-    ApiMethod,
-    ApiFunction,
-    ApiConstructor,
-    ApiItemKind,
     ApiClass,
+    ApiConstructor,
+    ApiConstructSignature,
+    ApiFunction,
+    ApiItem,
+    ApiItemKind,
+    ApiMethod,
+    ApiMethodSignature,
     ApiVariable,
     Parameter,
 } from "@microsoft/api-extractor"
 
+type ApiFunctionLike = ApiMethod | ApiMethodSignature | ApiFunction | ApiConstructSignature | ApiConstructor
+
 /**
  * Shorter, mostly unique, id for use in the URL permalinks.
  */
-export function toPermalink(item: ApiItem): string {
-    const id = toId(item)
+export function toPermalink(item: ApiItem, id: string = toId(item)): string {
     const hash = crypto
         .createHash("sha1")
         .update(id)
         .digest("hex")
-    return `${hash.slice(6)}-${item.displayName.toLowerCase()}`
+    return `${hash.slice(0, 6)}-${item.displayName.toLowerCase()}`
 }
 
 /**

@@ -1,5 +1,5 @@
 import * as React from "react"
-import { MethodModel, Kind, ReleaseTag } from "../../api"
+import { MethodModel, Kind, } from "../../api"
 import { FramerAPIContext } from "../contexts/FramerAPIContext"
 import { APIOverviewElement } from "./APIOverview"
 import { MissingModelWarning } from "./MissingModelWarning"
@@ -9,7 +9,7 @@ import { Grid } from "components/layout/Grid"
 import { Permalink } from "../layout/Permalink"
 import { APIParam, APIParams } from "./APIParams"
 import { Signature } from "./Signature"
-import { apiClassName, permalinkId } from "./helpers"
+import { apiClassName } from "./helpers"
 
 /**
  * Renders the documentation for a single method.
@@ -18,7 +18,7 @@ import { apiClassName, permalinkId } from "./helpers"
 export const APIMethodElement: React.FunctionComponent<MethodModel> = props => {
     const signatures = [props].concat(props.overloads).map(method => (
         <h3 key={method.id}>
-            <Permalink id={permalinkId(props)} name={props.name + "()"} skipnav />
+            <Permalink id={props.permalink} ref={props.id} name={props.name + "()"} skipnav />
             <Signature signature={method.signature} />
             <ReleaseBadge {...props} />
         </h3>
