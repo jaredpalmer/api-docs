@@ -251,6 +251,12 @@ Array [
 ]
 `;
 
+exports[`TSDocReactEmitter renders custom tag blocks 1`] = `
+<p>
+  Hello World
+</p>
+`;
+
 exports[`TSDocReactEmitter renders inline code blocks 1`] = `
 <p>
   Hello World this is some 

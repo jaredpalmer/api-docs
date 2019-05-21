@@ -4,6 +4,7 @@ import {
     DocNode,
     DocNodeKind,
     DocBlock,
+    DocBlockTag,
     DocCodeSpan,
     DocComment,
     DocDeclarationReference,
@@ -54,7 +55,7 @@ function render<T>(docNode: DocNode | undefined, { createElement, Fragment }: Li
 
         let idx = 0
         let n: DocNode | undefined
-
+        //console.log(docNodes.map(node => node && node.kind))
         // TODO: Re-write this to not be terrible.
         outer: while ((n = docNodes[idx])) {
             // TSDoc may include HTML markup, it processes this in a flat stream of DocNodes
@@ -119,15 +120,29 @@ function render<T>(docNode: DocNode | undefined, { createElement, Fragment }: Li
     // We use the `key` attribute to tag the fragments to help identify the type of
     // DocNodeKind that created it for debugging.
     const kind = docNode.kind as DocNodeKind
+    //console.log(kind)
     switch (kind) {
         // A semantic group of content denoted by a block tag
-        case DocNodeKind.Block:
+        case DocNodeKind.Block: {
             const docBlock: DocBlock = docNode as DocBlock
+            if (docBlock.blockTag.tagName === "@production") {
+                //console.log("found production tag")
+            }
+            /**
+             * Replace Fragment here with a React component that does something like
+             *
+             * const SwitchEnvironment = ({ environment: '@production' | '@prototype' }) => {
+             *   const currentEnvironment = useContext(VisibleEnvironment)
+             *   return (currentEnvironment === environment) ? children : null
+             * }
+             */
             return createElement(Fragment, { key: "DocBlock" }, renderNode(docBlock.content))
+        }
 
         // A block tag, e.g. @remarks or @example
-        case DocNodeKind.BlockTag:
-            return null // We don't want to show @ tags
+        case DocNodeKind.BlockTag: {
+            return null
+        }
 
         // Inline code
         case DocNodeKind.CodeSpan:
@@ -138,6 +153,7 @@ function render<T>(docNode: DocNode | undefined, { createElement, Fragment }: Li
         case DocNodeKind.Comment:
             const docComment: DocComment = docNode as DocComment
             const content = renderNodes([
+                ...docComment.customBlocks,
                 docComment.summarySection,
                 docComment.remarksBlock,
                 docComment.privateRemarks,
@@ -145,7 +161,6 @@ function render<T>(docNode: DocNode | undefined, { createElement, Fragment }: Li
                 docComment.params,
                 docComment.typeParams,
                 docComment.returnsBlock,
-                ...docComment.customBlocks,
                 docComment.inheritDocTag,
             ])
             if (docComment.modifierTagSet.nodes.length > 0) {

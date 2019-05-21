@@ -12,8 +12,7 @@ export const APIOverviewElement: React.FunctionComponent<{
     fallback?: React.ReactNode
     className?: string
 }> = props => {
-    // Hack to rename <motion.div> to <Frame> in our Framer docs.
-    let markup = renameMotionToFrame((props.summaryMarkup || "") + (props.remarksMarkup || ""))
+    let markup = (props.summaryMarkup || "") + (props.remarksMarkup || "")
     const api = React.useContext(FramerAPIContext)
 
     // Hackily resolve any inline references in the markup:
@@ -22,7 +21,13 @@ export const APIOverviewElement: React.FunctionComponent<{
         return match.replace(id, model ? model.id : id)
     })
 
-    return <div className={`grid--exclude ${props.className || ""}`} dangerouslySetInnerHTML={{ __html: markup }} data-tsdoc-ref={props.id} />
+    return (
+        <div
+            className={`grid--exclude ${props.className || ""}`}
+            dangerouslySetInnerHTML={{ __html: markup }}
+            data-tsdoc-ref={props.id}
+        />
+    )
 }
 
 /**
