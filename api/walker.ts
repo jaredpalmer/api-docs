@@ -241,6 +241,8 @@ function toParameter(method: ApiMethod | ApiMethodSignature | ApiFunction, param
         type: param.parameterTypeExcerpt.text,
         summaryMarkup: summaryMarkup,
         remarksMarkup: null,
+        prototypeMarkup: null,
+        productionMarkup: null,
     }
 }
 
@@ -269,18 +271,52 @@ function extractTSDoc(
     remarksMarkup: string | null
     tsdoc: string | null
     deprecatedMarkup: string | null
+    productionMarkup: string | null
+    prototypeMarkup: string | null
 } {
     if (item instanceof ApiDocumentedItem && item.tsdocComment) {
         const tsdoc = item.tsdocComment
+
+        const remarks = renderTSDocToHTML(tsdoc.remarksBlock)
+        let remarksMarkup = null
+        let prototypeMarkup = null
+        let productionMarkup = null
+
+        /**
+         * This is currently order-dependent. A more robust solution to this would be to
+         * define `@prototype` and `@production` as custom tags to api-extractor.
+         */
+        if (typeof remarks === "string") {
+            if (!remarks.startsWith("@prototype")) {
+                ;[remarksMarkup, prototypeMarkup] = remarks.split("@prototype")
+            } else {
+                // If there's no @remarks block
+                prototypeMarkup = remarks
+            }
+
+            if (prototypeMarkup) {
+                ;[prototypeMarkup, productionMarkup] = prototypeMarkup.split("@production")
+            }
+        }
+
         return {
             tsdoc: tsdoc.emitAsTsdoc(),
             summaryMarkup: renderTSDocToHTML(tsdoc.summarySection) || null,
-            remarksMarkup: renderTSDocToHTML(tsdoc.remarksBlock) || null,
+            remarksMarkup,
+            prototypeMarkup,
+            productionMarkup,
             deprecatedMarkup: renderTSDocToHTML(tsdoc.deprecatedBlock) || null,
         }
     }
 
-    return { summaryMarkup: null, tsdoc: null, remarksMarkup: null, deprecatedMarkup: null }
+    return {
+        summaryMarkup: null,
+        tsdoc: null,
+        remarksMarkup: null,
+        prototypeMarkup: null,
+        productionMarkup: null,
+        deprecatedMarkup: null,
+    }
 }
 
 function toKind(item: ApiItem): Kind {

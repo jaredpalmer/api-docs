@@ -2,7 +2,6 @@ import * as React from "react"
 import * as renderer from "react-test-renderer"
 import { TSDocParser, TSDocConfiguration, TSDocTagSyntaxKind, TSDocTagDefinition } from "@microsoft/tsdoc"
 import { renderTSDoc } from "../TSDocReactEmitter"
-import console = require("console")
 
 function createTestComponent(doc: string): renderer.ReactTestRenderer {
     const config = new TSDocConfiguration()

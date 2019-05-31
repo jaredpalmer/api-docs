@@ -46,6 +46,8 @@ export function renderTSDoc<T>(node: DocNode | undefined, opts: LikeReact<T>) {
     return render(node, opts)
 }
 
+const customTags = new Set(["@production", "@prototype"])
+
 function render<T>(docNode: DocNode | undefined, { createElement, Fragment }: LikeReact<any>): T | null {
     function renderNode(node: DocNode | undefined): T | null {
         return render(node, { createElement, Fragment })
@@ -125,24 +127,18 @@ function render<T>(docNode: DocNode | undefined, { createElement, Fragment }: Li
         // A semantic group of content denoted by a block tag
         case DocNodeKind.Block: {
             const docBlock: DocBlock = docNode as DocBlock
-            if (docBlock.blockTag.tagName === "@production") {
-                //console.log("found production tag")
-            }
-            /**
-             * Replace Fragment here with a React component that does something like
-             *
-             * const SwitchEnvironment = ({ environment: '@production' | '@prototype' }) => {
-             *   const currentEnvironment = useContext(VisibleEnvironment)
-             *   return (currentEnvironment === environment) ? children : null
-             * }
-             */
+
             return createElement(Fragment, { key: "DocBlock" }, renderNode(docBlock.content))
         }
 
         // A block tag, e.g. @remarks or @example
-        case DocNodeKind.BlockTag: {
-            return null
-        }
+        case DocNodeKind.BlockTag:
+            const docBlockTag = docNode as DocBlockTag
+            // If this is the start of the `@production` docs, we insert a marker here that will
+            // allow us to later split the docs into two.
+            return customTags.has(docBlockTag.tagName)
+                ? createElement(Fragment, { key: "DocBlock" }, docBlockTag.tagName)
+                : null // We don't want to show @ tags
 
         // Inline code
         case DocNodeKind.CodeSpan:
@@ -153,7 +149,6 @@ function render<T>(docNode: DocNode | undefined, { createElement, Fragment }: Li
         case DocNodeKind.Comment:
             const docComment: DocComment = docNode as DocComment
             const content = renderNodes([
-                ...docComment.customBlocks,
                 docComment.summarySection,
                 docComment.remarksBlock,
                 docComment.privateRemarks,
@@ -162,6 +157,7 @@ function render<T>(docNode: DocNode | undefined, { createElement, Fragment }: Li
                 docComment.typeParams,
                 docComment.returnsBlock,
                 docComment.inheritDocTag,
+                ...docComment.customBlocks,
             ])
             if (docComment.modifierTagSet.nodes.length > 0) {
                 //this._ensureLineSkipped()

@@ -1,4 +1,5 @@
 import * as React from "react"
+import { usePath } from "monobase"
 import { FramerAPIContext } from "../contexts/FramerAPIContext"
 
 /**
@@ -9,12 +10,34 @@ export const APIOverviewElement: React.FunctionComponent<{
     id?: string
     summaryMarkup?: string | null
     remarksMarkup?: string | null
+    prototypeMarkup?: string | null
+    productionMarkup?: string | null
     fallback?: React.ReactNode
     className?: string
 }> = props => {
-    let markup = (props.summaryMarkup || "") + (props.remarksMarkup || "")
+    const env = usePath().search("/production/") !== -1 ? "production" : "prototype"
     const api = React.useContext(FramerAPIContext)
+    let markup = props.summaryMarkup || ""
+    console.log(
+        "summary",
+        props.summaryMarkup,
+        "remarks",
+        props.remarksMarkup,
+        "prototype",
+        props.prototypeMarkup,
+        "production",
+        props.productionMarkup
+    )
+    if (props.remarksMarkup) {
+        markup += props.remarksMarkup
+    }
 
+    if (env === "prototype" && props.prototypeMarkup) {
+        markup += props.prototypeMarkup
+    } else if (env === "production" && props.productionMarkup) {
+        markup += props.productionMarkup
+    }
+    console.log(markup)
     // Hackily resolve any inline references in the markup:
     markup = markup.replace(LinkRefRegex, (match, id: string) => {
         const model = api.resolve(id)
@@ -45,10 +68,3 @@ export const APIOverview: React.FunctionComponent<{ name: string }> = ({ name })
  * value. Used for find/replace of @link tokens.
  */
 const LinkRefRegex = /data-link-ref="([^"]+)"/g
-
-/**
- * Finds mentions of motion.div in the source code and replaces them with Frame.
- */
-function renameMotionToFrame(html: string) {
-    return html.replace(/(&lt;\/?)motion\.div/g, "$1Frame")
-}
