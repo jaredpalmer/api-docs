@@ -277,32 +277,22 @@ function extractTSDoc(
     if (item instanceof ApiDocumentedItem && item.tsdocComment) {
         const tsdoc = item.tsdocComment
 
-        const remarks = renderTSDocToHTML(tsdoc.remarksBlock)
-        let remarksMarkup = null
         let prototypeMarkup = null
         let productionMarkup = null
+        const prototypeBlock = tsdoc.customBlocks.filter(x => x.blockTag.tagNameWithUpperCase === "Prototype")[0]
+        const productionBlock = tsdoc.customBlocks.filter(x => x.blockTag.tagNameWithUpperCase === "Production")[0]
 
-        /**
-         * This is currently order-dependent. A more robust solution to this would be to
-         * define `@prototype` and `@production` as custom tags to api-extractor.
-         */
-        if (typeof remarks === "string") {
-            if (!remarks.startsWith("@prototype")) {
-                ;[remarksMarkup, prototypeMarkup] = remarks.split("@prototype")
-            } else {
-                // If there's no @remarks block
-                prototypeMarkup = remarks
-            }
-
-            if (prototypeMarkup) {
-                ;[prototypeMarkup, productionMarkup] = prototypeMarkup.split("@production")
-            }
+        if (prototypeBlock) {
+            prototypeMarkup = renderTSDocToHTML(prototypeBlock)
+        }
+        if (productionBlock) {
+            productionMarkup = renderTSDocToHTML(productionBlock)
         }
 
         return {
             tsdoc: tsdoc.emitAsTsdoc(),
             summaryMarkup: renderTSDocToHTML(tsdoc.summarySection) || null,
-            remarksMarkup,
+            remarksMarkup: renderTSDocToHTML(tsdoc.remarksBlock),
             prototypeMarkup,
             productionMarkup,
             deprecatedMarkup: renderTSDocToHTML(tsdoc.deprecatedBlock) || null,

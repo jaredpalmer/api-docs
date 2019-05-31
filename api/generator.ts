@@ -18,9 +18,65 @@
 import * as fs from "fs"
 import * as path from "path"
 import * as assert from "assert"
-import { ApiModel, ReleaseTag as ApiReleaseTag } from "@microsoft/api-extractor-model"
+import { AedocDefinitions, ApiModel, ReleaseTag as ApiReleaseTag } from "@microsoft/api-extractor-model"
+import { TSDocConfiguration, TSDocTagDefinition, TSDocTagSyntaxKind, StandardTags } from "@microsoft/tsdoc"
 import { walk } from "./walker"
 import { RawAPIData, Kind, AnyRawModel } from "./types"
+
+const configuration: TSDocConfiguration = new TSDocConfiguration()
+
+const production = new TSDocTagDefinition({
+    tagName: "@production",
+    syntaxKind: TSDocTagSyntaxKind.BlockTag,
+    allowMultiple: false,
+})
+
+const prototype = new TSDocTagDefinition({
+    tagName: "@prototype",
+    syntaxKind: TSDocTagSyntaxKind.BlockTag,
+    allowMultiple: false,
+})
+
+configuration.addTagDefinitions(
+    [
+        AedocDefinitions.betaDocumentation,
+        AedocDefinitions.internalRemarks,
+        AedocDefinitions.preapprovedTag,
+        production,
+        prototype,
+    ],
+    true
+)
+
+configuration.setSupportForTags(
+    [
+        StandardTags.alpha,
+        StandardTags.beta,
+        StandardTags.defaultValue,
+        StandardTags.deprecated,
+        StandardTags.eventProperty,
+        StandardTags.example,
+        StandardTags.inheritDoc,
+        StandardTags.internal,
+        StandardTags.link,
+        StandardTags.override,
+        StandardTags.packageDocumentation,
+        StandardTags.param,
+        StandardTags.privateRemarks,
+        StandardTags.public,
+        StandardTags.readonly,
+        StandardTags.remarks,
+        StandardTags.returns,
+        StandardTags.sealed,
+        StandardTags.virtual,
+        production,
+        prototype,
+    ],
+    true
+)
+
+Object.defineProperty(AedocDefinitions.prototype, "_tsdocConfiguration", configuration)
+//AedocDefinitions.prototype._tsdocConfiguration = configuration
 
 function usage() {
     console.log(`Usage:\n    ${path.basename(process.argv[1])} <input1>[, <input2>]\n`)
@@ -46,6 +102,7 @@ function processInput(filepath: string): RawAPIData {
     assert.equal(pkg.entryPoints.length, 1, "Only support a single entry point at the moment")
 
     const map: RawAPIData = {}
+
     walk(pkg.entryPoints[0], ApiReleaseTag.Beta, item => {
         type PartialRawAPIData = { [key: string]: { model?: AnyRawModel; children: PartialRawAPIData } }
         const keys = item.id.split(".")
