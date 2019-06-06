@@ -1,11 +1,6 @@
 import * as React from "react"
-import { usePath } from "monobase"
 import { FramerAPIContext } from "../contexts/FramerAPIContext"
-
-enum Environment {
-    Production,
-    Prototype,
-}
+import { isProduction } from "../utils/env"
 
 /**
  * Renders the TSDoc documentation for a particular object. Will include both
@@ -20,7 +15,7 @@ export const APIOverviewElement: React.FunctionComponent<{
     fallback?: React.ReactNode
     className?: string
 }> = props => {
-    const env: Environment = usePath().search("/production/") !== -1 ? Environment.Production : Environment.Prototype
+    const isProd = isProduction()
     const api = React.useContext(FramerAPIContext)
     let markup = props.summaryMarkup || ""
 
@@ -28,9 +23,9 @@ export const APIOverviewElement: React.FunctionComponent<{
         markup += props.remarksMarkup
     }
 
-    if (env === Environment.Prototype && props.prototypeMarkup) {
+    if (!isProd && props.prototypeMarkup) {
         markup += props.prototypeMarkup
-    } else if (env === Environment.Production && props.productionMarkup) {
+    } else if (isProd && props.productionMarkup) {
         markup += props.productionMarkup
     }
 

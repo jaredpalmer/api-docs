@@ -21,9 +21,9 @@ import * as assert from "assert"
 import { ApiModel, ReleaseTag as ApiReleaseTag } from "@microsoft/api-extractor-model"
 import { walk } from "./walker"
 import { RawAPIData, Kind, AnyRawModel } from "./types"
-import { initCustomBlocks } from "./custom-blocks"
+import { patchAPIExtractorWithCustomTSDocTags } from "./custom-blocks"
 
-initCustomBlocks()
+patchAPIExtractorWithCustomTSDocTags()
 
 function usage() {
     console.log(`Usage:\n    ${path.basename(process.argv[1])} <input1>[, <input2>]\n`)

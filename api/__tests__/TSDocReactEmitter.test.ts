@@ -1,10 +1,11 @@
 import * as React from "react"
 import * as renderer from "react-test-renderer"
-import { TSDocParser, TSDocConfiguration, TSDocTagSyntaxKind, TSDocTagDefinition } from "@microsoft/tsdoc"
+import { TSDocParser } from "@microsoft/tsdoc"
 import { renderTSDoc } from "../TSDocReactEmitter"
+import { configuration } from "../custom-blocks"
 
 function createTestComponent(doc: string): renderer.ReactTestRenderer {
-    const parser = new TSDocParser()
+    const parser = new TSDocParser(configuration)
     const parsed = parser.parseString(doc)
     const element = renderTSDoc(parsed.docComment, React)
     if (!React.isValidElement(element)) throw new Error("renderTSDoc did not return an element")
@@ -24,6 +25,20 @@ describe("TSDocReactEmitter", () => {
         const component = createTestComponent(`
         /**
          * Hello World
+         */`)
+        expect(component.toJSON()).toMatchSnapshot()
+    })
+
+    test("renders a custom tag", () => {
+        const component = createTestComponent(`
+        /**
+         * Hello World
+         * 
+         * @prototype
+         * Hello prototype
+         * 
+         * @production
+         * Hello production
          */`)
         expect(component.toJSON()).toMatchSnapshot()
     })

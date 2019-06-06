@@ -123,11 +123,10 @@ function render<T>(docNode: DocNode | undefined, { createElement, Fragment }: Li
 
     switch (kind) {
         // A semantic group of content denoted by a block tag
-        case DocNodeKind.Block: {
+        case DocNodeKind.Block:
             const docBlock: DocBlock = docNode as DocBlock
 
             return createElement(Fragment, { key: "DocBlock" }, renderNode(docBlock.content))
-        }
 
         // A block tag, e.g. @remarks or @example
         case DocNodeKind.BlockTag:

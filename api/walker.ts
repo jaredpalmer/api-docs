@@ -276,25 +276,16 @@ function extractTSDoc(
 } {
     if (item instanceof ApiDocumentedItem && item.tsdocComment) {
         const tsdoc = item.tsdocComment
-
-        let prototypeMarkup = null
-        let productionMarkup = null
-        const prototypeBlock = tsdoc.customBlocks.filter(x => x.blockTag.tagNameWithUpperCase === "@PROTOTYPE")[0]
-        const productionBlock = tsdoc.customBlocks.filter(x => x.blockTag.tagNameWithUpperCase === "@PRODUCTION")[0]
-
-        if (prototypeBlock) {
-            prototypeMarkup = renderTSDocToHTML(prototypeBlock)
-        }
-        if (productionBlock) {
-            productionMarkup = renderTSDocToHTML(productionBlock)
-        }
+        const getCustomBlock = (tagName: string) =>
+            tsdoc.customBlocks.filter(x => x.blockTag.tagNameWithUpperCase === tagName).map(renderTSDocToHTML)[0] ||
+            null
 
         return {
             tsdoc: tsdoc.emitAsTsdoc(),
             summaryMarkup: renderTSDocToHTML(tsdoc.summarySection) || null,
             remarksMarkup: renderTSDocToHTML(tsdoc.remarksBlock),
-            prototypeMarkup,
-            productionMarkup,
+            prototypeMarkup: getCustomBlock("@PROTOTYPE"),
+            productionMarkup: getCustomBlock("@PRODUCTION"),
             deprecatedMarkup: renderTSDocToHTML(tsdoc.deprecatedBlock) || null,
         }
     }

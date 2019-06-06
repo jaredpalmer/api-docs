@@ -1,5 +1,5 @@
 import { AedocDefinitions } from "@microsoft/api-extractor-model"
-import { TSDocConfiguration, TSDocTagDefinition, TSDocTagSyntaxKind, StandardTags } from "@microsoft/tsdoc"
+import { TSDocConfiguration, TSDocTagDefinition, TSDocTagSyntaxKind } from "@microsoft/tsdoc"
 
 /**
  * Add support for `@production` and `@prototype` documentation blocks.
@@ -8,7 +8,7 @@ import { TSDocConfiguration, TSDocTagDefinition, TSDocTagSyntaxKind, StandardTag
  * There currently isn't an external API to add this behaviour.
  */
 
-const configuration: TSDocConfiguration = new TSDocConfiguration()
+export const configuration: TSDocConfiguration = AedocDefinitions.tsdocConfiguration
 
 const production = new TSDocTagDefinition({
     tagName: "@production",
@@ -22,45 +22,11 @@ const prototype = new TSDocTagDefinition({
     allowMultiple: false,
 })
 
-configuration.addTagDefinitions(
-    [
-        AedocDefinitions.betaDocumentation,
-        AedocDefinitions.internalRemarks,
-        AedocDefinitions.preapprovedTag,
-        production,
-        prototype,
-    ],
-    true
-)
+configuration.addTagDefinitions([production, prototype], true)
 
-configuration.setSupportForTags(
-    [
-        StandardTags.alpha,
-        StandardTags.beta,
-        StandardTags.defaultValue,
-        StandardTags.deprecated,
-        StandardTags.eventProperty,
-        StandardTags.example,
-        StandardTags.inheritDoc,
-        StandardTags.internal,
-        StandardTags.link,
-        StandardTags.override,
-        StandardTags.packageDocumentation,
-        StandardTags.param,
-        StandardTags.privateRemarks,
-        StandardTags.public,
-        StandardTags.readonly,
-        StandardTags.remarks,
-        StandardTags.returns,
-        StandardTags.sealed,
-        StandardTags.virtual,
-        production,
-        prototype,
-    ],
-    true
-)
+configuration.setSupportForTags([production, prototype], true)
 
-export function initCustomBlocks() {
+export function patchAPIExtractorWithCustomTSDocTags() {
     Object.defineProperty(AedocDefinitions, "tsdocConfiguration", {
         get: () => configuration,
     })
