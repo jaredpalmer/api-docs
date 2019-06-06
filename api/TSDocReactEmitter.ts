@@ -55,7 +55,7 @@ function render<T>(docNode: DocNode | undefined, { createElement, Fragment }: Li
 
         let idx = 0
         let n: DocNode | undefined
-        //console.log(docNodes.map(node => node && node.kind))
+
         // TODO: Re-write this to not be terrible.
         outer: while ((n = docNodes[idx])) {
             // TSDoc may include HTML markup, it processes this in a flat stream of DocNodes
@@ -120,7 +120,7 @@ function render<T>(docNode: DocNode | undefined, { createElement, Fragment }: Li
     // We use the `key` attribute to tag the fragments to help identify the type of
     // DocNodeKind that created it for debugging.
     const kind = docNode.kind as DocNodeKind
-    //console.log(kind)
+
     switch (kind) {
         // A semantic group of content denoted by a block tag
         case DocNodeKind.Block: {

@@ -18,16 +18,7 @@ export const APIOverviewElement: React.FunctionComponent<{
     const env = usePath().search("/production/") !== -1 ? "production" : "prototype"
     const api = React.useContext(FramerAPIContext)
     let markup = props.summaryMarkup || ""
-    console.log(
-        "summary",
-        props.summaryMarkup,
-        "remarks",
-        props.remarksMarkup,
-        "prototype",
-        props.prototypeMarkup,
-        "production",
-        props.productionMarkup
-    )
+
     if (props.remarksMarkup) {
         markup += props.remarksMarkup
     }
