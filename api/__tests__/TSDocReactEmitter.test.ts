@@ -24,9 +24,6 @@ describe("TSDocReactEmitter", () => {
         const component = createTestComponent(`
         /**
          * Hello World
-         * 
-         * @production
-         * Hello production world
          */`)
         expect(component.toJSON()).toMatchSnapshot()
     })

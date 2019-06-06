@@ -1,6 +1,13 @@
 import { AedocDefinitions } from "@microsoft/api-extractor-model"
 import { TSDocConfiguration, TSDocTagDefinition, TSDocTagSyntaxKind, StandardTags } from "@microsoft/tsdoc"
 
+/**
+ * Add support for `@production` and `@prototype` documentation blocks.
+ *
+ * We monkey-patch `AedocDefinitions` which `APIModel` uses to configure its block support.
+ * There currently isn't an external API to add this behaviour.
+ */
+
 const configuration: TSDocConfiguration = new TSDocConfiguration()
 
 const production = new TSDocTagDefinition({
