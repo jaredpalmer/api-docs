@@ -37,7 +37,7 @@ export const APIOverviewElement: React.FunctionComponent<{
     } else if (env === "production" && props.productionMarkup) {
         markup += props.productionMarkup
     }
-    console.log(markup)
+
     // Hackily resolve any inline references in the markup:
     markup = markup.replace(LinkRefRegex, (match, id: string) => {
         const model = api.resolve(id)

@@ -279,8 +279,8 @@ function extractTSDoc(
 
         let prototypeMarkup = null
         let productionMarkup = null
-        const prototypeBlock = tsdoc.customBlocks.filter(x => x.blockTag.tagNameWithUpperCase === "Prototype")[0]
-        const productionBlock = tsdoc.customBlocks.filter(x => x.blockTag.tagNameWithUpperCase === "Production")[0]
+        const prototypeBlock = tsdoc.customBlocks.filter(x => x.blockTag.tagNameWithUpperCase === "@PROTOTYPE")[0]
+        const productionBlock = tsdoc.customBlocks.filter(x => x.blockTag.tagNameWithUpperCase === "@PRODUCTION")[0]
 
         if (prototypeBlock) {
             prototypeMarkup = renderTSDocToHTML(prototypeBlock)
