@@ -1,10 +1,10 @@
 import * as React from "react"
 import { Menu, MenuItem, SubTitle } from "./layout/Menu"
+import { isMotion } from "./utils/env"
 
-/** Represents the main navigation for the site */
-export const Navigation: React.FunctionComponent = () => {
+const PrototypeMenu = () => {
     return (
-        <Menu>
+        <>
             <SubTitle name="Get Started" />
             <MenuItem className="home" href="/pages/index.mdx" title="Introduction" />
             <MenuItem className="guide" href="/pages/tutorial.mdx" title="Tutorial" />
@@ -27,6 +27,28 @@ export const Navigation: React.FunctionComponent = () => {
             <MenuItem className="canvas-components" href="/pages/canvas-components.mdx" title="CanvasComponents" />
             <MenuItem className="property-controls" href="/pages/property-controls.mdx" title="PropertyControls" />
             <MenuItem className="render-target" href="/pages/render-target.mdx" title="RenderTarget" />
-        </Menu>
+        </>
     )
+}
+
+const ProductionMenu = () => {
+    return (
+        <>
+            <SubTitle name="Get Started" />
+            <MenuItem className="home" href="/pages/motion/index.mdx" title="Introduction" />
+            <MenuItem className="examples" href="/pages/motion/examples.mdx" title="Examples" />
+            <MenuItem className="guide" href="/pages/motion/migration.mdx" title="Framer X to production" />
+
+            <SubTitle name="API" />
+            <MenuItem className="component" href="/pages/motion/component.mdx" title="Motion component" />
+            <MenuItem className="animation" href="/pages/motion/animation.mdx" title="Animation" />
+            <MenuItem className="gestures" href="/pages/motion/gestures.mdx" title="Gestures" />
+            <MenuItem className="motionvalue" href="/pages/motion/motionvalue.mdx" title="MotionValue" />
+        </>
+    )
+}
+
+/** Represents the main navigation for the site */
+export const Navigation: React.FunctionComponent = () => {
+    return <Menu>{isMotion() ? <ProductionMenu /> : <PrototypeMenu />}</Menu>
 }

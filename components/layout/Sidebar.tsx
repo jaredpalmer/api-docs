@@ -8,9 +8,7 @@ import { menuTextColor } from "../theme"
 import { version } from "framer/package.json"
 
 const Home = styled.div`
-    display: flex;
     height: 60px;
-    place-items: center;
     margin-bottom: 20px;
     border-bottom: 1px solid #eee;
     padding: 15px 20px;
@@ -39,6 +37,13 @@ const Toggle = styled.div`
     @media (min-width: ${tablet}) {
         display: none;
     }
+`
+
+const Sections = styled.div``
+
+const Info = styled.div`
+    place-items: center;
+    display: flex;
 `
 
 const SideBarWrapper = styled.aside`
@@ -123,28 +128,34 @@ const VersionBadge: React.FunctionComponent<{ version: string }> = props => {
 function formatVersion(str: string): string {
     function formatPrerelease(str: string): string {
         if (str.length === 0) return str
-        const [name, ...rest] = str.split('.')
-        return (name[0].toUpperCase() + name.slice(1)) + ' ' + rest.join('.')
+        const [name, ...rest] = str.split(".")
+        return name[0].toUpperCase() + name.slice(1) + " " + rest.join(".")
     }
 
-    const [version, ...prerelease] = str.split('-')
-    return version + ' ' + formatPrerelease(prerelease.join('-'))
+    const [version, ...prerelease] = str.split("-")
+    return version + " " + formatPrerelease(prerelease.join("-"))
 }
 
 export const Sidebar: React.FunctionComponent = () => (
     <SideBarWrapper className="side-bar-wrapper">
         <Home>
-            <a href="/api/">
-                <Icon>
-                    <svg style={{ marginRight: "10px" }} xmlns="http://www.w3.org/2000/svg" width="10" height="15">
-                        <path d="M10 0v5H5L0 0zM0 5h5l5 5H5v5l-5-5z" fill="rgba(0, 0, 0, 1.00)" />
-                    </svg>
-                </Icon>
-                <span style={{ fontWeight: 600, paddingTop: "3px", letterSpacing: "-0.5px" }}>API</span>
-            </a>
-            <VersionBadge version={formatVersion(version)} />
+            <Info>
+                <a href="/api/">
+                    <Icon>
+                        <svg style={{ marginRight: "10px" }} xmlns="http://www.w3.org/2000/svg" width="10" height="15">
+                            <path d="M10 0v5H5L0 0zM0 5h5l5 5H5v5l-5-5z" fill="rgba(0, 0, 0, 1.00)" />
+                        </svg>
+                    </Icon>
+                    <span style={{ fontWeight: 600, paddingTop: "3px", letterSpacing: "-0.5px" }}>API</span>
+                </a>
+                <VersionBadge version={formatVersion(version)} />
 
-            <DynamicMobileToggle />
+                <DynamicMobileToggle />
+            </Info>
+            <Sections>
+                <a href="/">Library</a>
+                <a href="/motion">Motion</a>
+            </Sections>
         </Home>
 
         <Navigation />

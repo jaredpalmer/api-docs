@@ -1,6 +1,6 @@
 import * as React from "react"
 import { FramerAPIContext } from "../contexts/FramerAPIContext"
-import { isProduction } from "../utils/env"
+import { isMotion } from "../utils/env"
 
 /**
  * Renders the TSDoc documentation for a particular object. Will include both
@@ -15,7 +15,7 @@ export const APIOverviewElement: React.FunctionComponent<{
     fallback?: React.ReactNode
     className?: string
 }> = props => {
-    const isProd = isProduction()
+    const isProd = isMotion()
     const api = React.useContext(FramerAPIContext)
     let markup = props.summaryMarkup || ""
 
