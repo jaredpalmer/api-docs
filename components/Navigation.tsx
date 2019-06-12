@@ -37,7 +37,7 @@ const ProductionMenu = () => {
             <SubTitle name="Get Started" />
             <MenuItem className="home" href="/pages/motion/index.mdx" title="Introduction" />
             <MenuItem className="examples" href="/pages/motion/examples.mdx" title="Examples" />
-            <MenuItem className="guide" href="/pages/motion/migration.mdx" title="Framer X to production" />
+            <MenuItem className="guide" href="/pages/motion/handover.mdx" title="Framer X to production" />
 
             <SubTitle name="API" />
             <MenuItem className="component" href="/pages/motion/component.mdx" title="Motion component" />
